@@ -1,8 +1,4 @@
 import streamlit as st
-import seaborn as sns
-from seaborn import heatmap
-
-import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -11,6 +7,67 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, accuracy_score
 import numpy as np  # Import numpy for min and max functions
+
+# Create a placeholder dataset (you should replace this with real data)
+X, y = make_classification(n_samples=100, n_features=5, random_state=42)
+df = pd.DataFrame(data=X, columns=['Feature1', 'Feature2', 'Feature3', 'Feature4', 'Feature5'])
+df['target'] = y
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(
+    df.drop('target', axis=1), df['target'], test_size=0.2, random_state=42
+)
+
+# Create a Random Forest Classifier
+rf_classifier = RandomForestClassifier()
+
+# Train the classifier
+rf_classifier.fit(X_train, y_train)
+
+# Make predictions
+y_pred = rf_classifier.predict(X_test)
+
+# Calculate accuracy
+accuracy = accuracy_score(y_test, y_pred)
+
+# Create a Streamlit web app
+st.title("Heat Wave Classifier")
+
+# Sidebar for user input
+st.sidebar.header("User Input")
+
+# Display dataset information
+st.sidebar.subheader("Dataset Info")
+st.sidebar.write(f"Number of samples: {len(df)}")
+st.sidebar.write(f"Number of features: {len(df.columns) - 1}")
+
+# Display classifier information
+st.sidebar.subheader("Classifier Info")
+st.sidebar.write(f"Classifier used: Random Forest")
+st.sidebar.write(f"Accuracy: {accuracy:.2f}")
+
+# Display the dataset
+st.subheader("Heat Waves Dataset")
+st.write(df)
+
+# Display a heatmap of the dataset
+st.subheader("Heatmap of the Dataset")
+sns.heatmap(df.corr(), annot=True, cmap='coolwarm')
+st.pyplot()
+
+# Additional EDA components
+
+# Descriptive statistics of the dataset
+st.subheader("Descriptive Statistics")
+st.write(df.describe())
+
+# Box plots for numeric features
+st.subheader("Box Plots")
+numeric_features = df.select_dtypes(include=['number']).columns
+selected_feature = st.selectbox("Select a feature:", numeric_features)
+if selected_feature:
+    st.write(sns.boxplot(x=df[selected_feature]))
+    st.pyplot()
 
 
 # Create a placeholder dataset (you should replace this with real data)
@@ -60,12 +117,7 @@ st.subheader("Heatmap of the Dataset")
 sns.heatmap(df.corr(), annot=True, cmap='coolwarm')
 st.pyplot()
 
-fig, ax = plt.subplots()
-
-
-fig.savefig('output.png', dpi=300)  # Specify dpi as needed
-
-plt.show()
+# Additional EDA components
 
 # Descriptive statistics of the dataset
 st.subheader("Descriptive Statistics")
