@@ -1,4 +1,8 @@
 import streamlit as st
+import seaborn as sns
+from seaborn import heatmap
+
+import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -56,7 +60,12 @@ st.subheader("Heatmap of the Dataset")
 sns.heatmap(df.corr(), annot=True, cmap='coolwarm')
 st.pyplot()
 
-# Additional EDA components
+fig, ax = plt.subplots()
+
+
+fig.savefig('output.png', dpi=300)  # Specify dpi as needed
+
+plt.show()
 
 # Descriptive statistics of the dataset
 st.subheader("Descriptive Statistics")
